@@ -37,7 +37,17 @@ Page({
     this.setData({
       statusBarHeight: systemInfo.statusBarHeight || 0
     })
-    
+    wx.cloud.callFunction({
+      name: 'getGoods'
+    }).then(res => {
+      console.log("✅ 云函数返回数据：", res.result)
+      // 把数据赋值给页面的 goodsList 变量
+      this.setData({
+        goodsList: res.result.data
+      })
+    }).catch(err => {
+      console.error("❌ 调用失败：", err)
+    })
     // 检查是否从扫码进入，获取桌码号
     // 小程序码扫码进入时，scene参数会在options.scene中
     if (options.scene) {
