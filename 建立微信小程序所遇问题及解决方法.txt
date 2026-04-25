@@ -1,0 +1,28 @@
+下载git bash
+无法登录网页的git hub，注册时使用google直接注册的，没有密码。Github又限制了使用密码登录，ai推荐使用密钥，生成pat（一次生成，长期使用。相当于给Git使用专门的密码用来登录github）或者SSH密钥使用手机端
+git bash 为什么输入那些命令，用来github什么用，显示密钥？后粘贴到key进行测试ssh连接
+git bash运行ssh -T git@github.com命令，第一次显示无法进行连接，是否继续？重新继续一次后显示hi 加我的账户名显示成功，又因操作失误导致退出界面，输入 ssh-T -p 443 git@ssh.github.com后成功连接，完成测试，显示hi 我的账户
+开始克隆
+克隆失败，要先确认仓库是否存在
+ssh -T git@github.com 还是显示hi，我的账户，表明没问题
+输入git clone git@github.com:w1486571368-hub/orderFood-wxCloud.git命令重新克隆，还是需要先输入密码，可能是电脑没有正确识别github的ssh密钥？
+执行ssh-add ~/.ssh/id_rsa 命令，密钥管理器没打开，加不进去密钥，失败
+执行eval "$(ssh-agent -s)"命令   显示agent  pid  522
+再输入ssh-add ~/.ssh/id_ed25519，输入密码之后显示identity added，成功！
+再输入ssh -T git@github。com测试，显示hi账户 ，成功
+输入git clone git@github.com:w1486571368-hub/orderFood-wxCloud.git继续克隆，还是显示cloning into orderfood .......找不到存储器无法远处进行存储
+（当前所在目录，git没有权限创建文件夹，所以无法写入、找不到存储器？）
+cd ~/Desktop命令进入桌面
+git clone git@github.com:w1486571368-hub/orderFood-wxCloud.git执行该命令克隆，还是显示Cloning into 'orderFood-wxCloud'...
+Please make sure you have the correct access rights and the repository exists.
+进入https://github.com/w1486571368-hub/orderFood-wxCloud 显示404，作者把库删了可能，以上好多无用功
+https://github.com/yangxiaohan168/orderFood-wxCloud访问原作者地址
+fork到自己的库里面，再执行git clone git@github.com:w1486571368-hub/orderFood-wxCloud.git
+成功！！！
+终端输入cd orderFood-wxCloud进入，再执行git remote add upstream git@github.com:yangxiaohan168/orderFood-wxCloud.git
+git fetch upstream语句关联原作者仓库
+输入命令git remote -v查看是否配置成功
+显示origin两个（自己的仓库）和upstream（原作者两个仓库）
+cd orderFood-wxCloud 进入该路径之后，start 。显示orderfood终端
+再输入 cd /d/  出来该目录，再输入start .  直接打开，显示D盘，未显示order food文件夹，输入命令find /d/ -name "orderFood-wxCloud" -type d 2>/dev/null
+还是未显示，直接返回主目录cd ~，输入git clone git@github.com:w1486571368-hub/orderFood-wxCloud.git尝试重新克隆，显示已经存在，直接start .打开文件所在位置。导入微信开发者工具，准备工作完成

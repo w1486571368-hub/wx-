@@ -1,0 +1,106 @@
+一、前期准备：微信小程序注册 & 环境搭建
+1. 注册微信小程序
+网址：https://mp.weixin.qq.com/
+注册成功后拿到：AppID
+作用：用于创建云开发项目
+2. 创建微信开发者工具项目
+选择：云开发模板
+填入 AppID
+项目创建成功，自动生成 cloudfunctions + miniprogram 目录
+二、最关键步骤：创建 goods 菜品数据库（你问的重点）
+在哪里添加 goods 数据库？
+位置：
+微信开发者工具 → 左上角「云开发」按钮 → 进入云开发控制台
+步骤：
+进入云开发控制台
+点击左侧 数据库
+点击 创建集合
+输入集合名称：goods
+点击确定，数据库创建完成
+然后添加数据：
+点击 goods 集合
+点击 添加记录
+手动输入字段：
+name: "熟牛肉"
+price: 18
+categoryId: 1
+保存，数据添加成功
+三、创建云函数 getGoods（读取数据库）
+在哪里创建？
+cloudfunctions/ 文件夹上 右键 → 新建云函数 → 输入 getGoods
+云函数代码作用：
+连接数据库
+读取 goods 集合里的所有菜品
+返回给小程序前端
+必须操作：
+创建完云函数后右键 getGoods → 上传并部署：云端安装依赖不上传部署，前端调用不到！
+四、小程序前端调试遇到的所有问题（超详细）
+问题 1：云函数测试正常，但页面显示「暂无菜品」
+现象：
+云开发控制台测试 getGoods 能返回数据
+小程序页面空白、不显示菜品
+控制台无报错
+原因：
+页面 index.js 没有调用云函数
+goodsList 变量是空的
+云函数没上传部署
+解决：
+在 pages/index/index.js 的 onLoad 里添加：
+js
+wx.cloud.callFunction({
+  name: "getGoods"
+}).then(res => {
+  this.setData({
+    goodsList: res.result.data
+  })
+})
+问题 2：控制台能打印数据，但页面依然不显示
+原因：
+WXML 中的变量名 goodsList 和 JS 不一致
+数据没渲染出来
+解决：
+确保 wxml 使用：
+html
+预览
+wx:for="{{goodsList}}"
+问题 3：云函数报错找不到 goods 集合
+原因：
+没创建 goods 数据库
+数据库权限没开
+解决：
+云开发控制台 → 数据库 → 权限 → 改为 所有用户可读
+五、上传 GitHub 遇到的所有问题（超详细）
+问题 1：remote origin already exists
+现象：
+git remote add 时报错，说已存在
+原因：
+本地已经绑定过仓库
+解决：
+plaintext
+git remote remove origin
+问题 2：上传后显示 fork 自别人的项目
+原因：
+创建仓库时 fork 了别人的代码
+解决：
+新建一个空白仓库，不要 fork
+问题 3：git push 失败、权限错误
+解决：
+重新关联新仓库：
+plaintext
+git remote add origin 你的新地址
+git push -u origin main
+问题 4：中文仓库名导致命令报错
+解决：
+仓库名尽量用英文：wx-order-miniprogram
+六、完整 Git 上传命令（最终版）
+plaintext
+git init
+git add .
+git commit -m "点餐小程序完成"
+git remote remove origin
+git remote add origin 你的GitHub地址
+git push -u origin main
+七、最终成功标志
+小程序页面能显示菜品
+GitHub 仓库能看到所有代码
+云函数、数据库、前端全部打通
